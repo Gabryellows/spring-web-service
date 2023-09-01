@@ -1,27 +1,33 @@
 package com.webservice.course.model.entities;
 
+import jakarta.persistence.*;
+
 import java.util.Date;
 
+@Entity
+@Table(name = "tb_payment")
 public class Payment implements java.io.Serializable{
 
     private static final long serialVersionUID = 1L;
 
-    private Integer id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private Date moment;
 
     public Payment() {
     }
 
-    public Payment(Integer id, Date moment) {
+    public Payment(Long id, Date moment) {
         this.id = id;
         this.moment = moment;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
