@@ -1,8 +1,11 @@
 package com.webservice.course.model.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "tb_category")
@@ -14,6 +17,10 @@ public class Category implements java.io.Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+
+    @ManyToMany(mappedBy = "categories")
+    @JsonIgnore
+    private Set<Product> product = new HashSet<>();
 
     public Category() {
     }
@@ -39,12 +46,16 @@ public class Category implements java.io.Serializable{
         this.name = name;
     }
 
+    public Set<Product> getProduct() {
+        return product;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Category category = (Category) o;
-        return Objects.equals(id, category.id) && Objects.equals(name, category.name);
+        return Objects.equals(id, category.id);
     }
 
     @Override
@@ -57,6 +68,7 @@ public class Category implements java.io.Serializable{
         return "Category{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", product=" + product +
                 '}';
     }
 }

@@ -1,7 +1,10 @@
 package com.webservice.course.model.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -18,6 +21,10 @@ public class User implements java.io.Serializable{
     private String password;
     private String phone;
 
+    @OneToMany(mappedBy = "client")
+    @JsonIgnore
+    private List<Order> orders = new ArrayList<>();
+
     public User() {
     }
 
@@ -27,6 +34,15 @@ public class User implements java.io.Serializable{
         this.email = email;
         this.password = password;
         this.phone = phone;
+    }
+
+    public User(Long id, String name, String email, String password, String phone, List<Order> orders) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.phone = phone;
+        this.orders = orders;
     }
 
     public Long getId() {
@@ -67,6 +83,10 @@ public class User implements java.io.Serializable{
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
     }
 
     @Override

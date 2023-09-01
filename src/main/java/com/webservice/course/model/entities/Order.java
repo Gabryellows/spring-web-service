@@ -1,8 +1,10 @@
 package com.webservice.course.model.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.webservice.course.model.enums.OrderStatus;
 import jakarta.persistence.*;
 
+import java.time.Instant;
 import java.util.Date;
 import java.util.Objects;
 
@@ -15,26 +17,21 @@ public class Order implements java.io.Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Date moment;
-    private OrderStatus status;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
+    private Instant moment;
+    private Integer orderStatus;
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "client_id")
+    private User client;
 
     public Order() {
     }
 
-    public Order(Long id, Date moment, OrderStatus status) {
+    public Order(Long id, Instant moment, OrderStatus orderStatus, User client) {
         this.id = id;
         this.moment = moment;
-        this.status = status;
-    }
-    
-    public Order(Long id, Date moment, OrderStatus status, User user) {
-        this.id = id;
-        this.moment = moment;
-        this.status = status;
-        this.user = user;
+        setOrderStatus(orderStatus);
+        this.client = client;
     }
 
     public Long getId() {
@@ -45,28 +42,28 @@ public class Order implements java.io.Serializable{
         this.id = id;
     }
 
-    public Date getMoment() {
+    public Instant getMoment() {
         return moment;
     }
 
-    public void setMoment(Date moment) {
+    public void setMoment(Instant moment) {
         this.moment = moment;
     }
 
-    public OrderStatus getStatus() {
-        return status;
+    public OrderStatus getOrderStatus() {
+        return OrderStatus.valueOf(orderStatus);
     }
 
-    public void setStatus(OrderStatus status) {
-        this.status = status;
+    public void setOrderStatus(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus.getCode();
     }
 
-    public User getUser() {
-        return user;
+    public User getClient() {
+        return client;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setClient(User client) {
+        this.client = client;
     }
 
     @Override
@@ -87,8 +84,8 @@ public class Order implements java.io.Serializable{
         return "Order{" +
                 "id=" + id +
                 ", moment=" + moment +
-                ", status=" + status +
-                ", user=" + user +
+                ", status=" + orderStatus +
+                ", user=" + client +
                 '}';
     }
 }
