@@ -1,12 +1,15 @@
 package com.webservice.course.model.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.webservice.course.model.enums.OrderStatus;
 import jakarta.persistence.*;
 
 import java.time.Instant;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "tb_order")
@@ -23,6 +26,12 @@ public class Order implements java.io.Serializable{
     @ManyToOne
     @JoinColumn(name = "client_id")
     private User client;
+
+    @OneToMany(mappedBy = "id.order")
+    private Set<OrderItem> items = new HashSet<>();
+
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+    private Payment payment;
 
     public Order() {
     }
@@ -64,6 +73,26 @@ public class Order implements java.io.Serializable{
 
     public void setClient(User client) {
         this.client = client;
+    }
+
+    public Set<OrderItem> getItems(){
+        return items;
+    }
+
+    public Payment getPayment() {
+        return payment;
+    }
+
+    public void setPayment(Payment payment) {
+        this.payment = payment;
+    }
+
+    public Double getTotal() {
+    	double sum = 0.0;
+    	for(OrderItem orderItem : items) {
+    		sum += orderItem.getSubTotal();
+    	}
+    	return sum;
     }
 
     @Override

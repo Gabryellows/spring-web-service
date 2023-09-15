@@ -13,10 +13,4 @@ import java.util.Date;
 @RequestMapping(value = "/payments")
 public class PaymentResource {
 
-    @GetMapping
-    public ResponseEntity<Payment> findAll() {
-        Payment payment = new Payment(1L, Date.from(Instant.parse("2021-09-30T10:00:00Z")));
-
-        return ResponseEntity.ok().body(payment);
-    }
 }
